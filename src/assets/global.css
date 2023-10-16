@@ -13,16 +13,6 @@ html{
 }
 
 
-@font-face {
-    font-display: swap;
-    font-family: Söhne;
-    font-style: normal;
-    font-weight: 400;
-    src:url(./font/soehne-buch.woff2);
-    /* src: url(https://xds.asia/assets/soehne-buch-e14e1bd2.woff2) format("woff2") */
-}
-
-
 button {
     font-family: inherit;
     font-size: 100%;

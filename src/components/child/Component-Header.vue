@@ -40,12 +40,11 @@
 
 <script setup>
 import { inject } from "vue";
-//<start>获取父组件变量/方法
+// 親コンポーネント変数/メソッドを取得します
 const chatHistory = inject("chatHistory");
 const activeIndex = inject("activeIndex");
 const newChat = inject("newChat");
 const drawerAside = inject("drawerAside");
-//<end>获取父组件变量/方法
 </script>
 
 <style scoped>

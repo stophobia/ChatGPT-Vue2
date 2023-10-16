@@ -79,7 +79,7 @@ const history = inject("history");
   overflow-x: auto;
 }
 
-/* 选择text类的第一个子元素 */
+/* textクラスの最初の子要素を選択 */
 
 :deep(.text p:first-child) {
   margin-top: 0px;
@@ -93,9 +93,8 @@ const history = inject("history");
   width: 30px;
   height: 30px;
   overflow: hidden;
-  /* 设置背景色为绿色 且沉在svg下面 */
+  /* SVGの背景色を緑に設定 */
   background-color: #43aa8b;
-  /* 圆角 */
   border-radius: 10%;
 }
 
@@ -107,7 +106,6 @@ const history = inject("history");
 }
 
 /* .ai-img svg {
-  设置图标水平垂直居中显示 基于父类ai-img
   position: relative;
   top: 50%;
   left: 50%;

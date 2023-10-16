@@ -104,10 +104,6 @@ const textarea = ref("");
   padding: 0;
 }
 
-
-
-
-
 .input-box {
   position: fixed;
   right: calc(100% / 2 - 43%);

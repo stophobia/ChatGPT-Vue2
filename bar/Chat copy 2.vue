@@ -7,8 +7,7 @@
 export default {
   methods: {
     handleBlur() {
-      // 在这里执行你想要的操作
-      console.log("失去焦点");
+      console.log("focus out");
     },
   },
 };

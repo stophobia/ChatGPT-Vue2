@@ -1,7 +1,7 @@
 <template>
   <div class="index">
     <h1 :style="screenWidth <= 768 ? `margin-right:0;` : `margin-top: 20vh;`">
-        Aoung AI
+        ChatGPT AI
     </h1>
     <div class="msg" :style="screenWidth >= 768 ? `flex-direction: row;` : ''">
       <div class="tip">
@@ -31,8 +31,8 @@
         <div @click="question = 'Explain quantum computing in simple terms'">
           "Explain quantum computing in simple terms" →
         </div>
-        <div @click="question = 'Got any creative ideas for a 10 year old’s birthday?'">
-          "Got any creative ideas for a 10 year old’s birthday?" →
+        <div @click="question = 'Got any creative ideas for a 10 year olds birthday?'">
+          "Got any creative ideas for a 10 year olds birthday?" →
         </div>
         <div @click="question = 'How do I make an HTTP request in Javascript?'">
           "How do I make an HTTP request in Javascript?" →
@@ -91,8 +91,8 @@
 
 <script setup>
 import { inject } from "vue";
-const question = inject("question"); //问题
-const screenWidth = inject("screenWidth");// 屏幕宽度
+const question = inject("question"); // 質問
+const screenWidth = inject("screenWidth");// 画面幅
 </script>
 
 <style scoped>
@@ -172,7 +172,6 @@ const screenWidth = inject("screenWidth");// 屏幕宽度
   height: 1.5rem;
   margin-right: 0.5rem;
   display: inline-block;
-  /*设置图标居中显示*/
   vertical-align: middle;
 }
 </style>

@@ -17,14 +17,14 @@
         </el-drawer>
         <el-scrollbar class="el-main-scrollbar" ref="scrollbarRef" :style="screenWidth<=768?'max-height: 95vh;':''">
           <el-main :style="screenWidth<=768?'width:auto':''">
-            <!-- 如果history为[]则显示首页提示组件 -->
+            <!-- 履歴の場合、ホームページプロンプトコンポーネントが表示されます -->
             <component-index v-if="history.length == 0"></component-index>
             <!-- 
-              xs（特小）：小于 576px 宽度的设备或窗口。
-              sm（小）：576px 或更大宽度的设备或窗口。
-              md（中）：768px 或更大宽度的设备或窗口。
-              lg（大）：992px 或更大宽度的设备或窗口。
-              xl（特大）：1200px 或更大宽度的设备或窗口。
+              xs（特小）：幅576px未満の機器または画面。
+              sm（小）：576pxまたは、より広い幅のデバイスまたは画面。
+              md（中）：768pxまたは、より広い幅のデバイスまたは画面。
+              lg（大）：992pxまたは、より広い幅のデバイスまたは画面。
+              xl（特大）：1200pxまたは、より広い幅のデバイスまたは画面。
              -->
             <component-content></component-content>
           </el-main>
@@ -44,9 +44,9 @@ import ComponentAside from "./child/Component-Aside.vue";
 import ComponentHeader from "./child/Component-Header.vue";
 import ComponentContent from "./child/Component-Content.vue";
 import ComponentFooter from "./child/Component-Footer.vue";
-import ComponentIndex from "./child/Component-Index.vue"; //不知为何 提示重复导入
+import ComponentIndex from "./child/Component-Index.vue";
 
-//<start> 实时监听屏幕宽度 大于768px时显示侧边栏
+// REAL-TIMEモニタリング画面幅：768px超え、サイドバー表示
 const screenWidth = ref(window.innerWidth);
 const handleResize = () => {
   screenWidth.value = window.innerWidth;
@@ -59,19 +59,18 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
-//<end> 实时监听屏幕宽度
 
-//变量声明
-const activeIndex = ref(-1); //当前会话索引
-const history = ref([]); //当前会话聊天记录
-const question = ref(""); //问题
-const deleteTitle = ref(-1); //删除会话索引
-const abortController = ref(null); //终止fetch
-const streamData = ref(false); //是否正在接收流式数据
-const drawerAside = ref(false); //侧边栏抽屉
+// 変数ステートメント
+const activeIndex = ref(-1); // 現在のセッションインデックス
+const history = ref([]); // 現在のセッションチャットレコード
+const question = ref(""); // 質問
+const deleteTitle = ref(-1); // セッションインデックスを削除します
+const abortController = ref(null); // fetch終了
+const streamData = ref(false); // ストリームデータを受信して​​いるかどうか
+const drawerAside = ref(false); // サイドバードロワー
 
-const scrollbarRef = ref(); //main的滚动条ref
-//新会话
+const scrollbarRef = ref(); //mainローリングバーRef
+// 新しいセッション
 const newChat = () => {
   console.log("newChat");
   history.value = [];
@@ -80,7 +79,7 @@ const newChat = () => {
   deleteTitle.value = -1;
 };
 
-//收集浏览器历史记录
+// ブラウザ履歴レコードのコレクション
 const chatHistory = ref([]);
 onBeforeMount(() => {
   chatHistory.value = JSON.parse(localStorage.getItem("chatHistory"));
@@ -88,10 +87,10 @@ onBeforeMount(() => {
   // console.log(chatHistory.value);
 });
 
-//<start>子组件传值
-//方法
+// コンポーネント値を代用
+// 方法
 provide("newChat", newChat);
-//变量
+// 変数
 provide("chatHistory", chatHistory);
 provide("history", history);
 provide("activeIndex", activeIndex);
@@ -100,14 +99,13 @@ provide("drawerAside", drawerAside);
 provide("abortController", abortController);
 provide("streamData", streamData);
 provide("scrollbarRef", scrollbarRef);
-provide("screenWidth", screenWidth);// 传递屏幕宽度
-//<end>子组件传值
+provide("screenWidth", screenWidth);// 画面幅を渡す
 </script>
 
 <style scoped>
 @media (width <= 768px) {
   /* .el-aside {
-    宽度少于768时aside会自动隐藏
+    幅が768未満の場合、asideは自動的に非表示になります
     display: none;
   } */
   /* .el-header.el-header {

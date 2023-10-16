@@ -143,7 +143,6 @@
         </el-header>
         <el-scrollbar class="el-main-scrollbar">
           <el-main>
-            <!-- 如果history为[]则显示div -->
             <div v-if="history.length == 0" class="index">
               <h1>ChatGPT</h1>
               <div class="msg">
@@ -236,13 +235,6 @@
                 </div>
               </div>
             </div>
-            <!-- 
-              xs（特小）：小于 576px 宽度的设备或窗口。
-              sm（小）：576px 或更大宽度的设备或窗口。
-              md（中）：768px 或更大宽度的设备或窗口。
-              lg（大）：992px 或更大宽度的设备或窗口。
-              xl（特大）：1200px 或更大宽度的设备或窗口。
-             -->
             <div v-for="(item, index) in history" :key="index" class="content">
               <el-row v-if="item.role === 'user'">
                 <el-col :xs="1" :sm="1" :md="3" :lg="4" :xl="6">
@@ -343,7 +335,6 @@ import { PlusOutlined, EditOutlined } from "@ant-design/icons-vue";
 import { onBeforeMount, onMounted, ref, nextTick } from "vue";
 import axios from "../axios";
 
-//head
 const editTitle = ref(-1);
 
 const inputFocus = ref(null);
@@ -355,11 +346,9 @@ const editButton = (index) => {
 };
 function handleBlur() {
   editTitle.value = -1;
-  // 在这里执行失焦后的操作
   console.log("Input 失焦了");
 }
 
-//aside
 const activeIndex = ref(-1);
 const getChatInfo = async (index) => {
   console.log("getChatInfo", index);
@@ -368,11 +357,9 @@ const getChatInfo = async (index) => {
   history.value = chatHistory.value[index].history;
 };
 
-//main
 const question = ref("");
-const contextLength = ref(8); //上下文长度
+const contextLength = ref(8);
 const sendQuestion = async () => {
-  //发送问题不能为空
   if (question.value == "") {
     return;
   }
@@ -392,7 +379,6 @@ const sendQuestion = async () => {
 
     activeIndex.value = (chatHistory.value.length - 1).toString();
   } else {
-    //旧会话
     history.value.push({ role: "user", content: question.value });
     history.value.push({ role: "ai", content: "" });
     sendApi();
@@ -421,24 +407,20 @@ const sendApi = async () => {
     // history.value[history.value.length - 1]["content"] += new TextDecoder("utf-8").decode(value);
     history.value.at(-1).content += new TextDecoder("utf-8").decode(value);
   }
-  //如果histroy长度为2 则说明是新会话 需要从最后一个开始覆盖
   if (history.value.length === 2) {
     chatHistory.value.at(-1).history = history.value;
     getTitle(chatHistory.value.length - 1);
   } else chatHistory.value.at(activeIndex.value).history = history.value;
-  //持久化 保存
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//新会话
-const history = ref([]); //聊天记录
+const history = ref([]);
 const newChat = () => {
   console.log("newChat");
   history.value = [];
   activeIndex.value = -1;
   deleteTitle.value = -1;
 };
-//获得会话标题 并 设置
 const getTitle = async (index) => {
   let data = chatHistory.value[index].history.slice(
     0,
@@ -447,7 +429,7 @@ const getTitle = async (index) => {
   data.push({
     role: "user",
     content:
-      "根据我们刚才以上的会话内容生成一个标题，token限制在10以内，只需回答标题内容即可",
+      "現在のセッションのコンテンツによると、タイトルを生成するために、トークンは10以内に制限されているため、タイトルコンテンツに答えるだけです",
   });
   console.log("setTitle", index, data);
   const response = await fetch("/chatGPT", {
@@ -469,17 +451,14 @@ const getTitle = async (index) => {
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//更改标题
 const setTitle = async (index) => {
   console.log("setTitle", index);
-  //从inputFocus中获取标题并设置
   console.log(inputFocus.value[index].value);
   chatHistory.value[index].title = inputFocus.value[index].value;
 
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//删除会话
 const deleteButton = (index) => {
   deleteTitle.value = index;
 };
@@ -496,19 +475,16 @@ const messageDelete = (index) => {
 
 const deleteTitle = ref(-1);
 
-//收集浏览器历史记录
 const chatHistory = ref([]);
 onBeforeMount(() => {
   chatHistory.value = JSON.parse(localStorage.getItem("chatHistory"));
   console.log(chatHistory.value);
 });
 
-//Enter 和 Shift+Enter的事件
 const handleEnterKey = (event) => {
-  //若同时按下shift键 则不触发
   if (event.shiftKey) return;
   sendQuestion();
-  event.preventDefault(); //阻止默认事件
+  event.preventDefault();
 };
 </script>
 
@@ -603,7 +579,6 @@ const handleEnterKey = (event) => {
   bottom: 0px;
   width: 100vw;
   background-image: linear-gradient(to bottom, transparent 0%, white 40%);
-  /* 设置层级高于main 渐变对main的滚动条一样生效 */
   z-index: 10;
 }
 
@@ -667,7 +642,6 @@ button {
 .edit div {
   width: 24px;
   height: 24px;
-  /* 垂直居中 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -805,21 +779,17 @@ button {
   height: 1.5rem;
   margin-right: 0.5rem;
   display: inline-block;
-  /*设置图标居中显示*/
   vertical-align: middle;
 }
 .ai-img {
   width: 30px;
   height: 30px;
   overflow: hidden;
-  /* 设置背景色为绿色 且沉在svg下面 */
   background-color: rgb(25, 194, 125);
-  /* 圆角 */
   border-radius: 10%;
 }
 
 .ai-img svg {
-  /* 设置图标水平垂直居中显示 基于父类ai-img*/
   position: relative;
   top: 50%;
   left: 50%;

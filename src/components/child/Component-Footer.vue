@@ -61,9 +61,7 @@
         class="input-entity"
         :style="
           screenWidth <= 768
-            ? `--width-input: 100vw;right: calc(100vw / 2 - var(--width-input) / 2);background-color: #ffffff;
-    border-top: #e5e5e5 solid 1px;
-    padding: 10px;`
+            ? `--width-input: 100vw;right: calc(100vw / 2 - var(--width-input) / 2);background-color: #ffffff;border-top: #e5e5e5 solid 1px;padding: 10px;`
             : ''
         "
       >
@@ -149,18 +147,7 @@
     --width-myInfo: 100vw;
     right: calc(100vw / 2 - var(--width-myInfo) / 2);`:''">
         <span>
-          The model is gpt-3.5-turbo-0301.Data stored locally in the browser (safe and
-          free).Problem feedback
-          <a
-            href="tencent://Message/?Uin=3342174599&websiteName=www.oicqzone.com&Menu=yes"
-            >QQ:3342174599</a
-          >
-          Author home page:
-          <a
-            href="http://aoung.cn"
-            target="_blank"
-            >Aoung</a
-          >
+          The model is gpt-3.5-turbo-0301.Data stored locally in the browser (safe and free).
         </span>
       </div>
     </div>
@@ -173,19 +160,19 @@ import { marked } from "marked";
 import hljs from "highlight.js";
 import { markedHighlight } from "marked-highlight";
 import { mangle } from "marked-mangle";
-//<start>获取父组件变量/方法
+// 親コンポーネント変数/メソッドを取得します
 const history = inject("history");
-const question = inject("question"); //问题
+const question = inject("question"); // 質問
 const chatHistory = inject("chatHistory");
 const activeIndex = inject("activeIndex");
-const abortController = inject("abortController"); //终止fetch
-const streamData = inject("streamData"); //是否正在接收流式数据
+const abortController = inject("abortController"); // fetch終了
+const streamData = inject("streamData"); // ストリームデータを受信して​​いるかどうか
 const scrollbarRef = inject("scrollbarRef");
-const screenWidth = inject("screenWidth"); //屏幕宽度
-let timer = null; // 定时器变量
-//<end>获取父组件变量/方法
-const contextLength = ref(8); //上下文长度
-// marked配置
+const screenWidth = inject("screenWidth"); // 画面幅
+let timer = null; // タイマー変数
+
+const contextLength = ref(8); // コンテクスト
+
 marked.setOptions({
   headerIds: false,
 });
@@ -200,8 +187,8 @@ marked.use(
   })
 );
 
-//定义变量
-const point1 = ref(true); //发送中需要动态变化的两个点
+// 定義変数
+const point1 = ref(true); // 送信中に動的な変更が必要な2つのポイント
 const point2 = ref(true);
 
 watch(streamData, (newVal) => {
@@ -214,13 +201,13 @@ watch(streamData, (newVal) => {
 
 //main
 const sendQuestion = () => {
-  //发送问题不能为空
+  // 問題を送信し、空にしないでください
   if (question.value == "") {
     return;
   }
 
   if (activeIndex.value === -1) {
-    //新会话
+    // 新しいセッション
     console.log("new chat", activeIndex.value);
 
     history.value = [
@@ -228,14 +215,14 @@ const sendQuestion = () => {
       { role: "ai", content: "" },
     ];
 
-    // 从尾部加入
+    // 後ろから追加
     // chatHistory.value.push({
     //   title: "New Chat",
     //   history: history.value,
     // });
     // activeIndex.value = (chatHistory.value.length - 1).toString();
 
-    // 从头加入
+    // 参加する
     chatHistory.value.unshift({
       title: "New Chat",
       history: history.value,
@@ -243,7 +230,7 @@ const sendQuestion = () => {
     activeIndex.value = "0";
     sendApi();
   } else {
-    //旧会话
+    // 古いセッション
     history.value.push({ role: "user", content: question.value });
     history.value.push({ role: "ai", content: "" });
     sendApi();
@@ -252,17 +239,17 @@ const sendQuestion = () => {
 };
 
 const sendApi = async () => {
-  setPoint(); //发送时两个点的动画
-  let index = parseInt(activeIndex.value); //当前会话索引
-  // 注：如果后续使用history.at(-1) 则在你自己手机中无法发送成功！！！
+  setPoint(); // 送信時のアニメーションの2つのポイント
+  let index = parseInt(activeIndex.value); // 現在のセッションインデックス
+  // 注：history.at(-1)に従うと、自分の携帯電話で正常に送信することはできません。
   let len = chatHistory.value[index].history.length - 1;
   chatHistory.value[index].history[len].content = "";
   delete chatHistory.value[index].history[len]["markdown"];
-  // chatHistory.value[index].history.at(-1).markdown; //清空上一次ai生成的内容
+  // chatHistory.value[index].history.at(-1).markdown; // 最後のAIによって生成されたコンテンツをクリア
   let data = chatHistory.value[index].history.slice(0, history.value.length - 1);
   
-  streamData.value = true; //开启流式数据
-  abortController.value = new AbortController(); //重置abortController
+  streamData.value = true; // オープンストリーミングデータ
+  abortController.value = new AbortController(); // abortController取り戻し
   const response = await fetch("/chatGPT", {
     method: "POST",
     headers: {
@@ -275,17 +262,17 @@ const sendApi = async () => {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    // 在每次循环开始之前检查请求是否已经中止
+    // 各サイクルが始まる前にリクエストが停止されたかどうかを確認
     if (abortController.value.signal.aborted) {
-      streamData.value = false; // 关闭流式数据
+      streamData.value = false; // ストリーミングデータを閉じる
       console.log("请求已经中止");
       break;
     }
     // console.log(done, value, new TextDecoder("utf-8").decode(value));
-    // 写法二：history.value[history.value.length - 1]["content"] += new TextDecoder("utf-8").decode(value);
+    // 2つを書く：history.value[history.value.length - 1]["content"] += new TextDecoder("utf-8").decode(value);
     chatHistory.value[index].history[len].content += new TextDecoder("utf-8").decode(
       value
-    ); //// 这样写也能改变history 因为本质history是一个引用
+    ); // 履歴変更不可（参照のため）
     chatHistory.value[index].history[len].markdown = marked.parse(
       chatHistory.value[index].history[len].content
     );
@@ -295,7 +282,6 @@ const sendApi = async () => {
       scrollbarRef.value.wrapRef.scrollHeight -
       (scrollbarRef.value.wrapRef.scrollTop + scrollbarRef.value.wrapRef.offsetHeight);
     if (Math.abs(sub) <= 2) {
-      //滚动条在底部时继续滑到底部
       scrollbarRef.value.wrapRef.scrollTop = scrollbarRef.value.wrapRef.scrollHeight;
     }
   }
@@ -303,13 +289,13 @@ const sendApi = async () => {
     chatHistory.value[index].title == "New Chat" &&
     chatHistory.value[index].history.length === 2
   )
-    getTitle(index); // 新会话 请求标题
-  //持久化 保存
+    getTitle(index); // 新しいセッション リクエストタイトル
+  // 持久化 保存
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
   console.log("持久化保存成功！");
-  streamData.value = false; //关闭流式数据
+  streamData.value = false; // ストリーミングデータを閉じる
 };
-//向ChatGPT获得会话标题 并 设置
+// ChatGptからセッションタイトルを取得してセットアップ
 const getTitle = async (index) => {
   let data = chatHistory.value[index].history.slice(
     0,
@@ -318,7 +304,7 @@ const getTitle = async (index) => {
   data.push({
     role: "user",
     content:
-      "根据我们刚才以上的会话内容生成一个标题，token限制在10以内，只需回答标题内容即可",
+      "現在のセッションのコンテンツによると、タイトルを生成するために、トークンは10以内に制限されているため、タイトルコンテンツに答えるだけです",
   });
   console.log("setTitle", index, data);
   const response = await fetch("/chatGPT", {
@@ -340,27 +326,27 @@ const getTitle = async (index) => {
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//停止接收流式数据
+// フローデータの受信を停止します
 const stopStream = () => {
   abortController.value.abort();
   streamData.value = false;
 };
 
-//Enter 和 Shift+Enter的事件
+// enterしてshift+enter イベントを入力します
 const handleEnterKey = (event) => {
-  //若同时按下shift键 则不触发
+  // shiftキーを同時に押すと、トリガーされません
   if (event.shiftKey) return;
   sendQuestion();
-  event.preventDefault(); //阻止默认事件
+  event.preventDefault(); // デフォルトを停止
 };
 
-//sendStyles
+// sendStyles
 const sendStyles = computed(() => {
   if (question.value == "") return "cursor:default;";
   else return "cursor:pointer;color:rgb(142, 142, 160);";
 });
 
-//设置两个点的动画
+// 2つのポイントアニメーションを設定
 const setPoint = () => {
   timer = setInterval(() => {
     // console.log("setPoint");
@@ -373,7 +359,7 @@ const setPoint = () => {
 
 <style>
 @import "../../assets/css/markdown.css";
-/* markdown样式补充 */
+/* markdownスタイル補助 */
 pre {
   /* user-select: all; */
   display: block;
@@ -418,7 +404,7 @@ pre {
   bottom: 0px;
   width: 100vw;
   background-image: linear-gradient(to bottom, transparent 0%, white 40%);
-  /* 设置层级高于main 渐变对main的滚动条一样生效 */
+  /* mainグラデーションよりも高い設定レベルは、mainローリングバーに有効になります */
   z-index: 10;
 }
 

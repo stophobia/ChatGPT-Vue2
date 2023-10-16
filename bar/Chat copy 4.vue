@@ -94,7 +94,6 @@
         </el-header>
         <el-scrollbar class="el-main-scrollbar">
           <el-main>
-            <!-- 如果history为[]则显示div -->
             <div v-if="history.length == 0" class="index">
               <h1>ChatGPT</h1>
               <div class="msg">
@@ -127,10 +126,10 @@
                   </div>
                   <div
                     @click="
-                      question = 'Got any creative ideas for a 10 year old’s birthday?'
+                      question = 'Got any creative ideas for a 10 year olds birthday?'
                     "
                   >
-                    "Got any creative ideas for a 10 year old’s birthday?" →
+                    "Got any creative ideas for a 10 year olds birthday?" →
                   </div>
                   <div @click="question = 'How do I make an HTTP request in Javascript?'">
                     "How do I make an HTTP request in Javascript?" →
@@ -187,13 +186,6 @@
                 </div>
               </div>
             </div>
-            <!-- 
-              xs（特小）：小于 576px 宽度的设备或窗口。
-              sm（小）：576px 或更大宽度的设备或窗口。
-              md（中）：768px 或更大宽度的设备或窗口。
-              lg（大）：992px 或更大宽度的设备或窗口。
-              xl（特大）：1200px 或更大宽度的设备或窗口。
-             -->
             <div v-for="(item, index) in history" :key="index" class="content">
               <el-row v-if="item.role === 'user'">
                 <el-col :xs="1" :sm="1" :md="3" :lg="4" :xl="6">
@@ -293,7 +285,6 @@ import { PlusOutlined, EditOutlined } from "@ant-design/icons-vue";
 import { onBeforeMount, ref } from "vue";
 import axios from "../../axios";
 
-//aside
 const activeIndex = ref(-1);
 const getChatInfo = async (history_index) => {
   console.log("getChatInfo", history_index);
@@ -301,11 +292,9 @@ const getChatInfo = async (history_index) => {
   history.value = chatHistory.value[history_index].history;
 };
 
-//main
 const question = ref("");
-const contextLength = ref(8); //上下文长度
+const contextLength = ref(8);
 const sendQuestion = async () => {
-  //发送问题不能为空
   if (question.value == "") {
     return;
   }
@@ -319,14 +308,12 @@ const sendQuestion = async () => {
     sendApi();
 
     chatHistory.value.push({
-      // titlle为question.value 的前八个字符
       title: question.value.slice(0, 15),
       history: history.value,
     });
 
     activeIndex.value = (chatHistory.value.length - 1).toString();
   } else {
-    //旧会话
     history.value.push({ role: "user", content: question.value });
     history.value.push({ role: "ai", content: "" });
     sendApi();
@@ -355,29 +342,26 @@ const sendApi = async () => {
     // history.value[history.value.length - 1]["content"] += new TextDecoder("utf-8").decode(value);
     history.value.at(-1).content += new TextDecoder("utf-8").decode(value);
   }
-  //如果histroy长度为2 则说明是新会话 需要从最后一个开始覆盖
+  // histroyの長さが2の場合、新しいセッションを最後のセッションからカバーする必要がある
   if (history.value.length === 2) chatHistory.value.at(-1).history = history.value;
   else chatHistory.value.at(activeIndex.value).history = history.value;
-  //持久化 保存
+  // 持久化 保存
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//新会话
-const history = ref([]); //聊天记录
+const history = ref([]);
 const newChat = () => {
   console.log("newChat");
   history.value = [];
   activeIndex.value = -1;
 };
 
-//删除会话
 const messageDelete = (index) => {
   console.log("messageDelete", index);
   chatHistory.value.splice(index, 1);
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//收集浏览器历史记录
 const chatHistory = ref([]);
 onBeforeMount(() => {
   chatHistory.value = JSON.parse(localStorage.getItem("chatHistory"));
@@ -526,7 +510,6 @@ button {
 .edit div {
   width: 24px;
   height: 24px;
-  /* 垂直居中 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -640,21 +623,17 @@ button {
   height: 1.5rem;
   margin-right: 0.5rem;
   display: inline-block;
-  /*设置图标居中显示*/
   vertical-align: middle;
 }
 .ai-img {
   width: 30px;
   height: 30px;
   overflow: hidden;
-  /* 设置背景色为绿色 且沉在svg下面 */
   background-color: rgb(25, 194, 125);
-  /* 圆角 */
   border-radius: 10%;
 }
 
 .ai-img svg {
-  /* 设置图标水平垂直居中显示 基于父类ai-img*/
   position: relative;
   top: 50%;
   left: 50%;

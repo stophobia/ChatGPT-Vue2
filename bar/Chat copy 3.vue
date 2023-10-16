@@ -47,7 +47,6 @@
       </el-aside>
       <el-container>
         <el-main>
-          <!-- 如果history为[]则显示div -->
           <div v-if="history.length == 0" class="index">
             <h1>ChatGPT</h1>
             <div class="msg">
@@ -125,7 +124,7 @@
                 <el-col :span="8">May occasionally generate incorrect information</el-col>
               </el-row>
               <el-row class="index-content">
-                <el-col :span="8">"Got any creative ideas for a 10 year old’s birthday?" →</el-col>
+                <el-col :span="8">"Got any creative ideas for a 10 year olds birthday?" →</el-col>
                 <el-col :span="8">Allows user to provide follow-up corrections</el-col>
                 <el-col :span="8">May occasionally produce harmful instructions or biased content</el-col>
               </el-row>
@@ -136,13 +135,6 @@
               </el-row>
             </div>
           </div>
-          <!-- 
-              xs（特小）：小于 576px 宽度的设备或窗口。
-              sm（小）：576px 或更大宽度的设备或窗口。
-              md（中）：768px 或更大宽度的设备或窗口。
-              lg（大）：992px 或更大宽度的设备或窗口。
-              xl（特大）：1200px 或更大宽度的设备或窗口。
-             -->
           <div v-for="(item, index) in history" :key="index" class="content">
             <el-row>
               <el-col :xs="1" :sm="1" :md="3" :lg="4" :xl="6">
@@ -250,42 +242,42 @@ const chatHistory = ref([]);
 const history = ref([]);
 onBeforeMount(() => {
   chatHistory.value.push({
-    title: "测试",
+    title: "test",
     history: [
-      { user: "你好0", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
+      { user: "おはよう0", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
     ],
   });
   chatHistory.value.push({
     title: "test1",
     history: [
-      { user: "你好1", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
+      { user: "おはよう1", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
     ],
   });
   chatHistory.value.push({
     title: "test2",
     history: [
-      { user: "你好2", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
+      { user: "おはよう2", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
     ],
   });
   chatHistory.value.push({
     title: "test3",
     history: [
-      { user: "你好3", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
-      { user: "你好", ai: "你好，我是ChatGPT" },
+      { user: "おはよう3", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
+      { user: "おはよう", ai: "おはよう、ChatGPT" },
     ],
   });
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 });
 const textarea = ref("");
 
-//新会话
+// 新しいセッション
 const newChat = () => {
   console.log("newChat");
   history.value = [];
@@ -370,21 +362,17 @@ const newChat = () => {
   height: 1.5rem;
   margin-right: 0.5rem;
   display: inline-block;
-  /*设置图标居中显示*/
   vertical-align: middle;
 }
 .ai-img {
   width: 30px;
   height: 30px;
   overflow: hidden;
-  /* 设置背景色为绿色 且沉在svg下面 */
   background-color: rgb(25, 194, 125);
-  /* 圆角 */
   border-radius: 10%;
 }
 
 .ai-img svg {
-  /* 设置图标水平垂直居中显示 基于父类ai-img*/
   position: relative;
   top: 50%;
   left: 50%;

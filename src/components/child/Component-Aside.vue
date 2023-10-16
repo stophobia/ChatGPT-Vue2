@@ -51,7 +51,7 @@
                 <input
                   :value="item.title"
                   class="edit-title"
-                  v-on:focus="console.log('input 聚焦了！')"
+                  v-on:focus="console.log('input focus in')"
                   v-on:blur="handleBlur"
                   ref="inputFocus"
                   @keydown.enter="
@@ -104,29 +104,28 @@
 import { ChatSquare, Delete, Check, Close } from "@element-plus/icons-vue";
 import { EditOutlined } from "@ant-design/icons-vue";
 import { ref, inject,nextTick } from "vue";
-//<start>获取父组件变量/方法
+// 親コンポーネント変数/メソッドを取得します
 const history = inject("history");
 const chatHistory = inject("chatHistory");
 const activeIndex = inject("activeIndex");
 const newChat = inject("newChat");
 const drawerAside = inject("drawerAside");
-const abortController = inject("abortController"); //终止fetch
-const streamData = inject("streamData"); //是否正在接收流式数据
-const scrollbarRef = inject("scrollbarRef"); // main的滚动条ref
-//<end>获取父组件变量/方法
+const abortController = inject("abortController");
+const streamData = inject("streamData");
+const scrollbarRef = inject("scrollbarRef");
 //aside
 
 const getChatInfo = async (index) => {
   console.log("getChatInfo", index);
   if (streamData.value) {
-    abortController.value.abort(); //终止fetch
+    abortController.value.abort();
   }
   if (index != deleteTitle.value) deleteTitle.value = -1;
   if (activeIndex.value != index) drawerAside.value = false;
   activeIndex.value = index.toString();
   history.value = chatHistory.value[index].history;
 
-  // 滚动条置底
+  // ローリングストリップ下部
   nextTick(() => {
     scrollbarRef.value.wrapRef.scrollTop = scrollbarRef.value.wrapRef.scrollHeight;
   });
@@ -144,21 +143,20 @@ const editButton = (index) => {
 };
 function handleBlur() {
   editTitle.value = -1;
-  // 在这里执行失焦后的操作
-  console.log("Input 失焦了");
+  console.log("Input focus out");
 }
 
-//更改标题
+// タイトルを変更します
 const setTitle = async (index) => {
   console.log("setTitle", index);
-  //从inputFocus中获取标题并设置
+  // inputfocusからタイトルを取得してセットアップします
   console.log(inputFocus.value[index].value);
   chatHistory.value[index].title = inputFocus.value[index].value;
 
   localStorage.setItem("chatHistory", JSON.stringify(chatHistory.value));
 };
 
-//删除会话
+// セッションを削除します
 const deleteButton = (index) => {
   deleteTitle.value = index;
 };
@@ -267,7 +265,6 @@ const deleteTitle = ref(-1);
 .edit div {
   width: 24px;
   height: 24px;
-  /* 垂直居中 */
   display: flex;
   align-items: center;
   justify-content: center;
